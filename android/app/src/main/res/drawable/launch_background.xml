@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Màn khởi động: nền xanh thương hiệu + icon 2 lá bài ở giữa. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/ic_launcher_background" />
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/ic_launcher_foreground" />
+    </item>
+</layer-list>
