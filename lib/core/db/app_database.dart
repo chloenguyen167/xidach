@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 import '../../domain/models/rule_set.dart';
 
 /// SQLite cục bộ. Android dùng SQLite có sẵn của hệ thống nên không tăng dung lượng app.
+/// Bản web chạy SQLite (wasm) và lưu file DB trong IndexedDB của trình duyệt.
 class AppDatabase {
   AppDatabase._(this.db, this.path);
 
@@ -19,7 +22,7 @@ class AppDatabase {
     DatabaseFactory? factory,
     String? path,
   }) async {
-    final f = factory ?? databaseFactory;
+    final f = factory ?? (kIsWeb ? databaseFactoryFfiWeb : databaseFactory);
     final dbPath = path ?? p.join(await f.getDatabasesPath(), fileName);
     final db = await f.openDatabase(
       dbPath,
@@ -86,6 +89,14 @@ class AppDatabase {
 
   /// Dung lượng file DB (bytes), kể cả WAL nếu có.
   Future<int> sizeInBytes() async {
+    if (kIsWeb) {
+      // Web không có file thật: tính theo số trang của SQLite.
+      final pages = Sqflite.firstIntValue(
+        await db.rawQuery('PRAGMA page_count'),
+      );
+      final size = Sqflite.firstIntValue(await db.rawQuery('PRAGMA page_size'));
+      return (pages ?? 0) * (size ?? 0);
+    }
     var total = 0;
     for (final suffix in ['', '-wal', '-journal']) {
       final f = File('$path$suffix');

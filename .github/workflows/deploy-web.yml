@@ -1,0 +1,58 @@
+# Build bản web (Flutter) và deploy lên GitHub Pages mỗi khi push lên main.
+# Lần đầu: vào Settings › Pages › Build and deployment › Source = "GitHub Actions".
+name: Deploy web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.1
+          channel: stable
+          cache: true
+
+      # Test chạy với SQLite hệ thống (xem hooks.user_defines trong pubspec.yaml).
+      - run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+      # --no-tree-shake-icons: tree-shake làm mất một số icon Font Awesome trên web.
+      - name: Build web
+        run: |
+          flutter build web --release \
+            --base-href "/${{ github.event.repository.name }}/" \
+            --no-tree-shake-icons
+          cp docs/privacy-policy.html build/web/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

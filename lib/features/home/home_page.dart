@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,13 +32,15 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text(appName),
         actions: [
-          IconButton(
-            tooltip: 'Ủng hộ nhà phát triển',
-            icon: const FaIcon(FontAwesomeIcons.mugHot, size: 20),
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const DonatePage())),
-          ),
+          // Ủng hộ qua Google Play Billing, không có trên bản web.
+          if (!kIsWeb)
+            IconButton(
+              tooltip: 'Ủng hộ nhà phát triển',
+              icon: const FaIcon(FontAwesomeIcons.mugHot, size: 20),
+              onPressed: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const DonatePage())),
+            ),
           IconButton(
             tooltip: 'Cài đặt',
             icon: const FaIcon(FontAwesomeIcons.gear, size: 20),

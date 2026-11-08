@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,6 +27,7 @@ class _XiDachAppState extends ConsumerState<XiDachApp> {
   }
 
   static void _applyOrientation(OrientationPref o) {
+    if (kIsWeb) return;
     SystemChrome.setPreferredOrientations(switch (o) {
       OrientationPref.auto => const [],
       OrientationPref.portrait => const [

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -56,9 +57,13 @@ class AboutPage extends StatelessWidget {
                   leading: FaIcon(FontAwesomeIcons.shieldHalved, size: 18),
                   title: Text('Không thu thập dữ liệu'),
                   subtitle: Text(
-                    'Mọi dữ liệu (lần chơi, người chơi, bộ luật) chỉ lưu trên máy của bạn '
-                    'và không được gửi đi đâu. Gỡ app hoặc dùng "Xóa dữ liệu" trong Cài đặt '
-                    'để xóa toàn bộ.',
+                    kIsWeb
+                        ? 'Mọi dữ liệu (lần chơi, người chơi, bộ luật) chỉ lưu trong trình duyệt '
+                              'này và không được gửi đi đâu. Dùng "Xóa dữ liệu" trong Cài đặt hoặc '
+                              'xóa dữ liệu trang web của trình duyệt để xóa toàn bộ.'
+                        : 'Mọi dữ liệu (lần chơi, người chơi, bộ luật) chỉ lưu trên máy của bạn '
+                              'và không được gửi đi đâu. Gỡ app hoặc dùng "Xóa dữ liệu" trong Cài đặt '
+                              'để xóa toàn bộ.',
                   ),
                 ),
                 const ListTile(

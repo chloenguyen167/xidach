@@ -14,6 +14,23 @@ flutter test                     # unit + widget (DB thật qua sqflite_common_f
 flutter test test/screenshots --update-goldens --dart-define=SCREENSHOTS=true
 ```
 
+## Bản web (GitHub Pages)
+
+Cùng một codebase, build ra web: https://chloenguyen167.github.io/xidach/
+
+- Không có backend. Dữ liệu vẫn là SQLite (chạy bằng wasm qua `sqflite_common_ffi_web`), file DB lưu trong IndexedDB của trình duyệt.
+  "Xóa dữ liệu chơi / cài đặt" trong Cài đặt hoạt động như bản app. Xóa dữ liệu trang web của trình duyệt cũng sẽ xóa hết.
+- Trên web ẩn mục Ủng hộ (Google Play Billing) và Xoay màn hình (trình duyệt không cho khóa xoay).
+- `web/sqlite3.wasm` và `web/sqflite_sw.js` được commit sẵn. Khi nâng version `sqflite_common_ffi_web` thì chạy lại
+  `dart run sqflite_common_ffi_web:setup --force` để cập nhật 2 file này.
+- Deploy: tự chạy qua `.github/workflows/deploy-web.yml` mỗi khi push lên `main` (analyze + test → build → Pages).
+  Lần đầu cần vào *Settings › Pages › Source* chọn **GitHub Actions**.
+- Chạy thử trên máy: `flutter run -d chrome`. Build giống CI:
+  ```sh
+  flutter build web --release --base-href /xidach/ --no-tree-shake-icons
+  ```
+  Cần `--no-tree-shake-icons` vì nếu tree-shake thì một số icon Font Awesome trên web bị mất (hiện ô vuông).
+
 ## Cấu trúc
 
 ```

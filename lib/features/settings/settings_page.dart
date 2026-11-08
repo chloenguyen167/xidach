@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -151,18 +152,20 @@ class SettingsPage extends ConsumerWidget {
                     (m) => n.update((x) => x.copyWith(themeMode: m)),
                   ),
                 ),
-                ListTile(
-                  leading: _icon(FontAwesomeIcons.mobileScreenButton),
-                  title: const Text('Xoay màn hình'),
-                  subtitle: Text(p.orientation.label),
-                  onTap: () => choose<OrientationPref>(
-                    'Xoay màn hình',
-                    OrientationPref.values,
-                    p.orientation,
-                    (o) => o.label,
-                    (o) => n.update((x) => x.copyWith(orientation: o)),
+                // Trình duyệt không cho khóa xoay màn hình.
+                if (!kIsWeb)
+                  ListTile(
+                    leading: _icon(FontAwesomeIcons.mobileScreenButton),
+                    title: const Text('Xoay màn hình'),
+                    subtitle: Text(p.orientation.label),
+                    onTap: () => choose<OrientationPref>(
+                      'Xoay màn hình',
+                      OrientationPref.values,
+                      p.orientation,
+                      (o) => o.label,
+                      (o) => n.update((x) => x.copyWith(orientation: o)),
+                    ),
                   ),
-                ),
                 SwitchListTile(
                   secondary: _icon(FontAwesomeIcons.lightbulb),
                   title: const Text('Giữ màn hình sáng'),
@@ -176,7 +179,9 @@ class SettingsPage extends ConsumerWidget {
                   value: p.haptics,
                   onChanged: (v) => n.update((x) => x.copyWith(haptics: v)),
                 ),
-                const SectionHeader('Dữ liệu trên máy'),
+                const SectionHeader(
+                  kIsWeb ? 'Dữ liệu trong trình duyệt' : 'Dữ liệu trên máy',
+                ),
                 const _DataSection(),
                 const SectionHeader('Khác'),
                 ListTile(
@@ -184,11 +189,12 @@ class SettingsPage extends ConsumerWidget {
                   title: const Text('Luật xì dách'),
                   onTap: () => _push(context, const RulesReferencePage()),
                 ),
-                ListTile(
-                  leading: _icon(FontAwesomeIcons.mugHot),
-                  title: const Text('Ủng hộ nhà phát triển'),
-                  onTap: () => _push(context, const DonatePage()),
-                ),
+                if (!kIsWeb)
+                  ListTile(
+                    leading: _icon(FontAwesomeIcons.mugHot),
+                    title: const Text('Ủng hộ nhà phát triển'),
+                    onTap: () => _push(context, const DonatePage()),
+                  ),
                 ListTile(
                   leading: _icon(FontAwesomeIcons.circleInfo),
                   title: const Text('Giới thiệu'),

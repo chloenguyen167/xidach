@@ -1,0 +1,19 @@
+{
+    "name": "Tính điểm xì dách",
+    "short_name": "Xì dách",
+    "start_url": ".",
+    "scope": ".",
+    "display": "standalone",
+    "background_color": "#33A13F",
+    "theme_color": "#33A13F",
+    "description": "Ghi điểm/tiền xì dách từng ván. Dữ liệu chỉ lưu trong trình duyệt.",
+    "lang": "vi",
+    "orientation": "any",
+    "prefer_related_applications": false,
+    "icons": [
+        { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png" },
+        { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" },
+        { "src": "icons/Icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+        { "src": "icons/Icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}
